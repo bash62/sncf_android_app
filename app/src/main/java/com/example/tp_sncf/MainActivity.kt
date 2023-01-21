@@ -2,24 +2,26 @@ package com.example.tp_sncf
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import java.io.BufferedReader
 import android.view.View
 import android.widget.AdapterView
-
 import android.widget.AutoCompleteTextView
-
 import android.widget.ArrayAdapter
-import android.widget.Toast
-import androidx.core.view.get
+import android.widget.ListView
 import okhttp3.*
+import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.IOException
-import java.sql.DriverManager
+import java.util.*
+
+import java.sql.Timestamp
+import java.time.Instant
 
 
 class MainActivity : AppCompatActivity() {
     private val client = OkHttpClient()
+    var trains = arrayListOf<Train>()
+    var adapter_lv: ArrayAdapter<Train>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,6 +37,15 @@ class MainActivity : AppCompatActivity() {
         val autocomplete = findViewById<View>(R.id.ac_ville) as AutoCompleteTextView
         // Load les données dans l'AutoCompleteTextView
         autocomplete.setAdapter(adapter)
+
+        adapter_lv = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1, trains
+        )
+        var mListView = findViewById<ListView>(R.id.lv_res) as ListView
+        mListView.adapter = adapter_lv
+
+
 
         // Listener a la selection de la ville correspondante
         autocomplete.setOnItemClickListener(AdapterView.OnItemClickListener { parent, arg1, pos, id ->
@@ -67,15 +78,38 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!response.isSuccessful) throw IOException("Unexpected code $response")
+                    trains.clear()
+                    // reset listview
 
-                    for ((name, value) in response.headers) {
-                        println("$name: $value")
+                    //Reponse de la requete
+
+                    // On récupére le JSON et on le cast en JSONObject
+                    val j =  JSONObject(response.body!!.string())
+
+                    // Récupération de departures qui est de forme JSON array
+                    val jArray = j.getJSONArray("departures")
+                    println(jArray)
+                    // List of trains
+
+                    //Pour chaque train on boucle
+                    for (i in 0 until jArray.length()){
+                        // Cast de chaque train en JSONObject
+                        val jsonTrain = JSONObject(jArray[i].toString())
+                        // On recréer un ojet JSON pour pouvoir récupérer les informations
+                        val jsonInfo = JSONObject(jsonTrain.get("display_informations").toString())
+                        val jsonDate = JSONObject(jsonTrain.get("stop_date_time").toString())
+                        val train = Train(jsonInfo.get("headsign").toString().toInt(),jsonInfo.get("direction").toString(),
+                            65116565132.toInt()
+                        )
+                        trains.add(train)
+
                     }
-                    // Cast de la réponse en JSON
-                    val jsonObject = JSONTokener(response.body!!.string()).nextValue() as JSONObject
-                    val departures = jsonObject["departures"]
+                    //Notifier le changement de l'adaptateur
+                    this@MainActivity.runOnUiThread(java.lang.Runnable {
+                        adapter_lv?.notifyDataSetChanged()
+                    })
+                    println(trains)
 
-                    println(departures)
                 }
             }
         })
