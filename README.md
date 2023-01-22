@@ -5,7 +5,7 @@
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## Demonstration
 
 ![](https://github.com/bash62/sncf_android_app/blob/main/app.gif)
 
