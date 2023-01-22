@@ -1,8 +1,10 @@
 package com.example.tp_sncf
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.ArrayAdapter
@@ -56,9 +58,20 @@ class MainActivity : AppCompatActivity() {
             buildApiurl(selectedStation.codeUic)
         })
 
+        //
 
 
     }
+
+    //Ferme le clavier après séléction
+    fun closeKeyboard(){
+        this.currentFocus?.let { view ->
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+
     // Retourne un lien de l'api correspondant à l'id du train séléctionné
     fun buildApiurl(id:Int){
         var base_url = "https://api.sncf.com/v1/coverage/sncf/stop_areas/stop_area:SNCF:$id/departures/?count=10&key=3e194807-7518-4a97-a37d-c6076e38fce8"
@@ -78,13 +91,12 @@ class MainActivity : AppCompatActivity() {
 
             // Réponse de l'api
             override fun onResponse(call: Call, response: Response) {
+
+                // Reset des trains
+                trains.clear()
                 response.use {
                     if (!response.isSuccessful) throw IOException("Unexpected code $response")
-                    trains.clear()
-                    // reset listview
-                    this@MainActivity.runOnUiThread(java.lang.Runnable {
-                        adapter_lv?.notifyDataSetChanged()
-                    })
+
 
                     //Reponse de la requete
 
@@ -103,7 +115,7 @@ class MainActivity : AppCompatActivity() {
                         val jsonDate = JSONObject(jsonTrain.get("stop_date_time").toString())
 
                         // Création d'un Train avec les donnèes de l'api
-                        val train = Train(jsonInfo.get("headsign").toString().toInt(),jsonInfo.get("direction").toString(),
+                        val train = Train(jsonInfo.get("headsign").toString(),jsonInfo.get("direction").toString(),
                             jsonDate.get("arrival_date_time").toString()
 
                         )
@@ -111,15 +123,22 @@ class MainActivity : AppCompatActivity() {
                         trains.add(train)
 
                     }
-                    //Notifier le changement de l'adaptateur
+                    var mListView = findViewById<ListView>(R.id.lv_res) as ListView
+                    // Notifier le changement de l'adaptateur en utilisant le thread principal
                     this@MainActivity.runOnUiThread(java.lang.Runnable {
+                        // Notifi le Dataset
                         adapter_lv?.notifyDataSetChanged()
+                        // Change les données de l'adaptater
+                        mListView.adapter = adapter_lv
+                        // Réduit le clavier
+                        closeKeyboard()
                     })
                     println(trains)
 
                 }
             }
         })
+
     }
 
     fun initListStations(): List<Station> {

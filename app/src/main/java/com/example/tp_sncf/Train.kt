@@ -13,7 +13,7 @@ import java.util.*
 class Train(
     //numéro, destination ou
     //provenance, heure, minute)
-    val num: Int,
+    val num: String,
     val destination: String,
     // Date de depart
     val depart: String,
