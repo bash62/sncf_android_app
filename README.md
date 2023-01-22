@@ -9,7 +9,7 @@
 
 
 <p align="center">
-![](https://github.com/bash62/sncf_android_app/blob/main/app.gif)
+<img src="https://github.com/bash62/sncf_android_app/blob/main/app.gif" alt="Demonstration" />
 <a href="#readme-top">back to top</a></p>
 
 
