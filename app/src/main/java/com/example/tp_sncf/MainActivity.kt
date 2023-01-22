@@ -49,6 +49,8 @@ class MainActivity : AppCompatActivity() {
 
         // Listener a la selection de la ville correspondante
         autocomplete.setOnItemClickListener(AdapterView.OnItemClickListener { parent, arg1, pos, id ->
+
+            // Récupération de l'élément cliqué
             var selectedStation = parent.getItemAtPosition(pos) as Station
             println(selectedStation.toString())
             buildApiurl(selectedStation.codeUic)
@@ -80,6 +82,9 @@ class MainActivity : AppCompatActivity() {
                     if (!response.isSuccessful) throw IOException("Unexpected code $response")
                     trains.clear()
                     // reset listview
+                    this@MainActivity.runOnUiThread(java.lang.Runnable {
+                        adapter_lv?.notifyDataSetChanged()
+                    })
 
                     //Reponse de la requete
 
@@ -88,20 +93,21 @@ class MainActivity : AppCompatActivity() {
 
                     // Récupération de departures qui est de forme JSON array
                     val jArray = j.getJSONArray("departures")
-                    println(jArray)
-                    // List of trains
 
                     //Pour chaque train on boucle
                     for (i in 0 until jArray.length()){
                         // Cast de chaque train en JSONObject
                         val jsonTrain = JSONObject(jArray[i].toString())
-                        // On recréer un ojet JSON pour pouvoir récupérer les informations
+                        // Création d'un ojet JSON pour pouvoir récupérer les informations
                         val jsonInfo = JSONObject(jsonTrain.get("display_informations").toString())
                         val jsonDate = JSONObject(jsonTrain.get("stop_date_time").toString())
+
+                        // Création d'un Train avec les donnèes de l'api
                         val train = Train(jsonInfo.get("headsign").toString().toInt(),jsonInfo.get("direction").toString(),
                             jsonDate.get("arrival_date_time").toString()
-                        
+
                         )
+
                         trains.add(train)
 
                     }
