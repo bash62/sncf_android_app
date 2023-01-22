@@ -1,14 +1,5 @@
 package com.example.tp_sncf
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import okhttp3.*
-import java.sql.Timestamp
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 class Train(
     //numéro, destination ou

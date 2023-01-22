@@ -10,15 +10,8 @@ import android.widget.AutoCompleteTextView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import okhttp3.*
-import org.json.JSONArray
 import org.json.JSONObject
-import org.json.JSONTokener
 import java.io.IOException
-import java.util.*
-
-import java.sql.Timestamp
-import java.time.Instant
-
 
 class MainActivity : AppCompatActivity() {
     private val client = OkHttpClient()
