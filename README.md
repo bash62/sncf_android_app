@@ -9,7 +9,7 @@
 
 ![](https://github.com/bash62/sncf_android_app/blob/main/app.gif)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="center">(<a href="#readme-top">back to top</a>)</p>
 
 
 
