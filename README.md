@@ -23,3 +23,12 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+## Author
+
+- [Bash62](https://github.com/bash62) - _Initial work_
+
+## Aknowledgements
+
+- [SNCF Api](https://numerique.sncf.com/startup/api/)
+- [Nativia Playground](https://playground.nativia.io)
+
