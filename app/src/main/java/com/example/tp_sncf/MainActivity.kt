@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                         val jsonInfo = JSONObject(jsonTrain.get("display_informations").toString())
                         val jsonDate = JSONObject(jsonTrain.get("stop_date_time").toString())
                         val train = Train(jsonInfo.get("headsign").toString().toInt(),jsonInfo.get("direction").toString(),
-                            65116565132.toInt()
+                            jsonDate.get("arrival_date_time").toString().split("T")[1]
                         )
                         trains.add(train)
 
