@@ -2,4 +2,5 @@
     <string name="app_name">TP_SNCF</string>
     <string name="txt_depart">Prochain départ</string>
     <string name="txt_autocomplete">Ville</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
