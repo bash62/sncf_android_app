@@ -2,6 +2,7 @@ package com.example.tp_sncf
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -44,7 +45,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
+
         val train = intent.extras!!.get("train") as Train // get the train from the intent
+
+        val textView = findViewById<TextView>(R.id.text_view_train) as TextView
+        textView.text = train.toMapsTextView() // display the train in the text view
         val stops: List<LatLng> = train.stops.map { LatLng(it.getStation()!!.getLat(), it.getStation()!!.getLon()) }
 
         // Calculate the average of the stops

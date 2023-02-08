@@ -27,6 +27,16 @@ class Train(
 
     }
 
+    fun getFrom(): Stop? {
+        return from
+    }
+
+    fun getTo(): Stop? {
+        return to
+    }
+    fun toMapsTextView(): String {
+        return  type.toString() + " n°" + num + "\n"+from?.getStation()?.getName() + "-" + to?.getStation()?.getName()
+    }
     override fun toString(): String {
 
         return "$localHour"+"h"+"$localMinute - " + to?.getStation()?.getName() + "\n $num - $type" ;
