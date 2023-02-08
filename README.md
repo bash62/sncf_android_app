@@ -11,7 +11,9 @@
 <p align="center">
 <img src="https://github.com/bash62/sncf_android_app/blob/main/app.gif" alt="Demonstration" />
 </p>
-
+<p align="center">
+<img src="https://i.imgur.com/Yw3PvyK.png" alt="Demonstration MAPS" />
+</p>
 
 
 

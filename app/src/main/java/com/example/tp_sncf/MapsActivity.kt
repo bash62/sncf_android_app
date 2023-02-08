@@ -10,6 +10,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.tp_sncf.databinding.ActivityMapsBinding
+import com.example.tp_sncf.entities.Train
+import com.google.android.gms.maps.model.PolylineOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -26,6 +28,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+
     }
 
     /**
@@ -40,9 +44,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val train = intent.extras!!.get("train") as Train // get the train from the intent
+        val stops: List<LatLng> = train.stops.map { LatLng(it.getStation()!!.getLat(), it.getStation()!!.getLon()) }
+
+        // Calculate the average of the stops
+        val latAverage = train.stops.map { it.getStation()!!.getLat() }.average()
+        val longAverage = train.stops.map { it.getStation()!!.getLon() }.average()
+
+        googleMap.addPolyline(
+            PolylineOptions()
+            .clickable(true)
+            .addAll(stops)
+        )
+
+        // Add a marker for each stop
+        train.stops.forEach {
+            val marker = LatLng(it.getStation()!!.getLat(), it.getStation()!!.getLon())
+            mMap.addMarker(MarkerOptions().position(marker).title(it.getStation()!!.getName()))
+        }
+
+        // Move the camera to the average of the stops
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latAverage, longAverage), 8f))
+
+
     }
 }

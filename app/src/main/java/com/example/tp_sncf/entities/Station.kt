@@ -32,6 +32,13 @@ class Station (
 
     }
 
+    fun getLon(): Double {
+        return lon
+    }
+    fun getLat(): Double {
+        return lat
+    }
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
         parcel.writeDouble(lon)

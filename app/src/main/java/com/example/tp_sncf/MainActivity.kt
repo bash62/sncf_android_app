@@ -65,6 +65,8 @@ class MainActivity : AppCompatActivity() {
             println("Clicked item: ${parent.getItemAtPosition(position)}")
             // Get the selected train
             val el = parent.getItemAtPosition(position) as Train
+            println(el)
+
             // Create intent to open the map activity
             val intent = Intent(this, MapsActivity::class.java)
             // Pass the train to the map activity

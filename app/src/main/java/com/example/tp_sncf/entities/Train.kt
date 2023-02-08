@@ -10,19 +10,21 @@ class Train(
     private var to: Stop? = null,
     private val localHour: String,
     private val localMinute: String,
-    private var Stops: ArrayList<Stop> = ArrayList<Stop>(),
     private val type: TypeTrain,
     ) : Parcelable {
 
-    constructor(parcel: Parcel) : this(
+    var stops: ArrayList<Stop> = arrayListOf()
+
+    constructor(parcel: Parcel) : this (
         parcel.readString()!!,
         parcel.readParcelable(Stop::class.java.classLoader),
         parcel.readParcelable(Stop::class.java.classLoader),
         parcel.readString()!!,
         parcel.readString()!!,
-        TODO("Stops"),
         TypeTrain.valueOf(parcel.readString()!!)
     ) {
+        parcel.readList(stops, Stop::class.java.classLoader)
+
     }
 
     override fun toString(): String {
@@ -37,7 +39,7 @@ class Train(
         } else if (arrivalStation) {
             to = stop
         }
-        Stops.add(stop)
+        stops.add(stop)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -46,6 +48,8 @@ class Train(
         parcel.writeParcelable(to, flags)
         parcel.writeString(localHour)
         parcel.writeString(localMinute)
+        parcel.writeString(type.name)
+        parcel.writeList(stops)
     }
 
     override fun describeContents(): Int {
